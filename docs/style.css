@@ -56,6 +56,9 @@ body {
 canvas {
     display: block;
 }
+canvas:not(.guides) {
+    background: black;
+}
 .guides {
     position: absolute;
     bottom: 0;
