@@ -15,7 +15,8 @@ document.body.appendChild(renderer.domElement);
 
 // camera
 const orbitCamera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
-orbitCamera.position.set(0.0, 1.4, 0.7);
+// orbitCamera.position.set(0.0, 1.4, 0.7); // org
+orbitCamera.position.set(0.0, 1.4, 0.6);
 
 // controls
 const orbitControls = new THREE.OrbitControls(orbitCamera, renderer.domElement);
@@ -33,6 +34,20 @@ scene.add(light);
 
 // Main Render Loop
 const clock = new THREE.Clock();
+
+function onKeyUp(e) {
+    console.log(e)
+
+    if (e.key === 't') {
+        document.querySelector('.preview').classList.toggle('is-visible')
+    }
+}
+
+function addEventListeners() {
+    window.addEventListener('keyup', onKeyUp)
+}
+
+addEventListeners()
 
 function animate() {
     requestAnimationFrame(animate);
@@ -63,6 +78,15 @@ loader.load(
             currentVrm = vrm;
             currentVrm.scene.rotation.y = Math.PI; // Rotate model 180deg to face camera
         });
+
+        // Map scene to find lowpoly body mesh
+        gltf.scene.children.map(item => {
+            console.log(item)
+            if (item.name === 'BASE_Low_Poly_Man') {
+                item.visible = false
+            }
+        })
+
     },
 
     (progress) => console.log("Loading model...", 100.0 * (progress.loaded / progress.total), "%"),
@@ -325,6 +349,8 @@ const camera = new Camera(videoElement, {
     onFrame: async () => {
         await holistic.send({ image: videoElement });
     },
+    // width: 1280,
+    // height: 960,
     width: 640,
     height: 480,
 });
