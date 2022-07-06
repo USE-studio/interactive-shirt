@@ -14,12 +14,12 @@ renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
 // camera
-const orbitCamera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
-// orbitCamera.position.set(0.0, 1.4, 0.7); // org
-orbitCamera.position.set(0.0, 1.4, 0.6);
+const cameraScene = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
+// cameraScene.position.set(0.0, 1.4, 0.7); // org
+cameraScene.position.set(0.0, 1.4, 0.6);
 
 // controls
-const orbitControls = new THREE.OrbitControls(orbitCamera, renderer.domElement);
+const orbitControls = new THREE.OrbitControls(cameraScene, renderer.domElement);
 orbitControls.screenSpacePanning = true;
 orbitControls.target.set(0.0, 1.4, 0.0);
 orbitControls.update();
@@ -38,16 +38,23 @@ const clock = new THREE.Clock();
 function onKeyUp(e) {
     console.log(e)
 
+    // Hide / show the background guides
     if (e.key === 't') {
         document.querySelector('.preview').classList.toggle('is-visible')
     }
-}
 
-function addEventListeners() {
-    window.addEventListener('keyup', onKeyUp)
+    // Toggle fullscreen
+    if (e.key === 'f') {
+        if (document.fullscreenElement === null) {
+            // console.log("Exited fullscreen");
+            document.documentElement.requestFullscreen()
+        }
+        else {
+            document.exitFullscreen()
+            // console.log("Entered fullscreen");
+        }
+    }
 }
-
-addEventListeners()
 
 function animate() {
     requestAnimationFrame(animate);
@@ -56,7 +63,7 @@ function animate() {
         // Update model to render physics
         currentVrm.update(clock.getDelta());
     }
-    renderer.render(scene, orbitCamera);
+    renderer.render(scene, cameraScene);
 }
 animate();
 
@@ -355,3 +362,29 @@ const camera = new Camera(videoElement, {
     height: 480,
 });
 camera.start();
+
+function onResize() {
+    var self = this
+    // Update sizes
+    let sizes = {
+        width: window.innerWidth,
+        height: window.innerHeight
+    }
+
+    // Update camera
+    cameraScene.aspect = sizes.width / sizes.height
+    cameraScene.updateProjectionMatrix()
+
+    // Update renderer
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+}
+
+function addEventListeners() {
+    // Add key event listeners
+    window.addEventListener('keyup', onKeyUp)
+
+    window.addEventListener('resize', onResize)
+}
+
+addEventListeners()
