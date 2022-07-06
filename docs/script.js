@@ -49,10 +49,11 @@ animate();
 
 // Import Character VRM
 const loader = new THREE.GLTFLoader();
-loader.crossOrigin = "anonymous";
+// loader.crossOrigin = "anonymous";
 // Import model from URL, add your own model here
 loader.load(
-    "https://cdn.glitch.com/29e07830-2317-4b15-a044-135e73c7f840%2FAshtra.vrm?v=1630342336981",
+    // "https://cdn.glitch.com/29e07830-2317-4b15-a044-135e73c7f840%2FAshtra.vrm?v=1630342336981",
+    "./models/festuge-shirt-laurits-1.0_myrig_mixamo.vrm",
 
     (gltf) => {
         THREE.VRMUtils.removeUnnecessaryJoints(gltf.scene);

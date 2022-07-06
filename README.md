@@ -1,3 +1,8 @@
+More about Kalidokit and different MoveNet, MediaPipe BlazePose, and PoseNet.
+https://analyticsindiamag.com/tensorflow-releases-new-3d-pose-detection-model/
+
+Org doc:
+
 <img src="https://github.com/yeemachine/kalidokit/blob/main/docs/kalidokit-logo.png?raw=true" alt="Kalidokit Template" width="200ps" style="margin-bottom:10px"/>
 
 [![NPM Package][npm]][npm-url]
