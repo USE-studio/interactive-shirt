@@ -35,6 +35,23 @@ scene.add(light);
 // Main Render Loop
 const clock = new THREE.Clock();
 
+// Texture loader
+const textureLoader = new THREE.TextureLoader()
+
+const diffuseKnittingPattern = textureLoader.load( './textures/Strik_texture_diffuse.png' ) // 
+const diffusePieces = textureLoader.load( './textures/Sweater_tpose_01_diffuse_patterns.png' ) //
+
+// const bakedFloorMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+const shirtMaterial = new THREE.MeshStandardMaterial({
+    // map: diffuseKnittingPattern,
+    map: diffusePieces,
+    // alphaMap: bakedFloorTextureAlphaMap,
+    // aoMapIntensity: 1,
+    // transparent: true
+})
+
+
+
 function onKeyUp(e) {
     console.log(e)
 
@@ -67,6 +84,48 @@ function animate() {
 }
 animate();
 
+var pitchMaterialParams = {
+    uniforms: THREE.UniformsUtils.merge([{
+
+        fade: { type: "f", value: 0 },
+        // u_texture1: { type: "t", value: texture1 },
+        // u_texture2: { type: "t", value: texture2 }
+        u_texture1: { type: "t", value: diffuseKnittingPattern },
+        u_texture2: { type: "t", value: diffusePieces }
+
+    }]),
+    vertexShader: 
+        `
+        
+        precision highp float;
+        precision highp int;
+        varying vec2 v_uv;
+        varying float v_textureIndex;
+        
+        void main() {
+            v_textureIndex = step(0.5, uv.x) + step(0.5, uv.y) * 2.0;
+            v_uv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+        
+        `,
+    fragmentShader: 
+    `
+
+        precision mediump float;
+        
+        varying vec2 v_uv;
+        varying float v_textureIndex;
+        uniform sampler2D u_texture1;
+        uniform sampler2D u_texture2;
+        
+        void main() {
+        gl_FragColor = mix( texture2D(u_texture1, v_uv), texture2D(u_texture2, v_uv), step(0.5, v_textureIndex) );
+        }
+
+    `
+};
+
 /* VRM CHARACTER SETUP */
 
 // Import Character VRM
@@ -89,8 +148,15 @@ loader.load(
         // Map scene to find lowpoly body mesh
         gltf.scene.children.map(item => {
             console.log(item)
+            // If it is the low poly character
             if (item.name === 'BASE_Low_Poly_Man') {
                 item.visible = false
+            }
+            // If it is the shirt
+            if (item.name === 'Sweater_tpose_nikolaj_thin_01') {
+                var material = new THREE.ShaderMaterial(pitchMaterialParams);
+                material.side = THREE.DoubleSide;   
+                // item.material = material
             }
         })
 
