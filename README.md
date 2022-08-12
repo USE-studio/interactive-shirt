@@ -1,3 +1,11 @@
+#### Via NPM
+
+Run project
+```
+npm run dev
+```
+
+
 More about Kalidokit and different MoveNet, MediaPipe BlazePose, and PoseNet.
 https://analyticsindiamag.com/tensorflow-releases-new-3d-pose-detection-model/
 
