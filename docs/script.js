@@ -32,6 +32,12 @@ const light = new THREE.DirectionalLight(0xffffff);
 light.position.set(1.0, 1.0, 1.0).normalize();
 scene.add(light);
 
+// ambient light
+const lightAmbient = new THREE.AmbientLight(0xffffff);
+lightAmbient.intensity = 0.5
+// light.position.set(1.0, 1.0, 1.0).normalize();
+scene.add(lightAmbient);
+
 // Main Render Loop
 const clock = new THREE.Clock();
 
@@ -134,7 +140,10 @@ const loader = new THREE.GLTFLoader();
 // Import model from URL, add your own model here
 loader.load(
     // "https://cdn.glitch.com/29e07830-2317-4b15-a044-135e73c7f840%2FAshtra.vrm?v=1630342336981",
-    "./models/festuge-shirt-laurits-1.0_myrig_mixamo.vrm",
+    // "./models/festuge-shirt-laurits-1.0_myrig_mixamo.vrm",
+
+    // "./models/festuge_7_short_sleeves.vrm",
+    "./models/festuge_7_long_sleeves.vrm",
 
     (gltf) => {
         THREE.VRMUtils.removeUnnecessaryJoints(gltf.scene);
